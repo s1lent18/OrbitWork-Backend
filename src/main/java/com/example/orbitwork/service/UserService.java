@@ -7,4 +7,5 @@ public interface UserService {
 
     LoginResponse register(UserDTO userDTO);
 
+    LoginResponse getUser(String email);
 }

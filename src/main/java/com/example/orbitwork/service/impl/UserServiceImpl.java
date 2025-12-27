@@ -5,9 +5,11 @@ import com.example.orbitwork.dto.UserDTO;
 import com.example.orbitwork.entity.Role;
 import com.example.orbitwork.entity.User;
 import com.example.orbitwork.exception.UserAlreadyExistsException;
+import com.example.orbitwork.exception.UserNotFoundException;
 import com.example.orbitwork.repository.RoleRepository;
 import com.example.orbitwork.repository.UserRepository;
 import com.example.orbitwork.service.UserService;
+import jakarta.transaction.Transactional;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public LoginResponse register(UserDTO userDTO) {
 
         if (userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
@@ -49,8 +52,18 @@ public class UserServiceImpl implements UserService {
         return new LoginResponse(
                 savedUser.getId(),
                 savedUser.getName(),
-                savedUser.getEmail(),
-                "token"
+                savedUser.getEmail()
+        );
+    }
+
+    @Override
+    public LoginResponse getUser(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User Not Found"));
+
+        return new LoginResponse(
+                user.getId(),
+                user.getName(),
+                user.getEmail()
         );
     }
 }

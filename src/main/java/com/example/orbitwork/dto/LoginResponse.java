@@ -22,4 +22,10 @@ public class LoginResponse {
 
     @NotBlank(message = "Token not provided")
     String token;
+
+    public LoginResponse(Long id, String name, String email) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+    }
 }
