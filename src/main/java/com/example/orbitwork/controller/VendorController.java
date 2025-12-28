@@ -2,8 +2,8 @@ package com.example.orbitwork.controller;
 
 import com.example.orbitwork.dto.LoginRequest;
 import com.example.orbitwork.dto.LoginResponse;
-import com.example.orbitwork.dto.UserDTO;
-import com.example.orbitwork.service.UserService;
+import com.example.orbitwork.dto.VendorDTO;
+import com.example.orbitwork.service.VendorService;
 import com.example.orbitwork.utils.JwtUtil;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -21,31 +21,31 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping("/vendor")
+public class VendorController {
 
     private final JwtUtil jwtUtil;
 
     private final UserDetailsService userDetailsService;
 
-    private final UserService userService;
+    private final VendorService vendorService;
 
     private final AuthenticationManager authenticationManager;
 
-    public UserController(JwtUtil jwtUtil, UserDetailsService userDetailsService, UserService userService, AuthenticationManager authenticationManager) {
+    public VendorController(JwtUtil jwtUtil, UserDetailsService userDetailsService, VendorService vendorService, AuthenticationManager authenticationManager) {
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
-        this.userService = userService;
+        this.vendorService = vendorService;
         this.authenticationManager = authenticationManager;
     }
 
     @PostMapping
     public ResponseEntity<Map<String, LoginResponse>> registerUser(
-            @RequestBody @Valid UserDTO userDTO
+            @RequestBody @Valid VendorDTO vendorDTO
             ) {
         Map<String, LoginResponse> response = new HashMap<>();
-        LoginResponse loginResponse = userService.register(userDTO);
-        response.put("registerUserData", loginResponse);
+        LoginResponse loginResponse = vendorService.register(vendorDTO);
+        response.put("registerVendorData", loginResponse);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -56,11 +56,11 @@ public class UserController {
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
-        LoginResponse req = userService.getUser(request.getEmail());
+        LoginResponse req = vendorService.getVendor(request.getEmail());
         req.setToken(jwtUtil.generateToken(userDetails));
 
         Map<String, LoginResponse> response = new HashMap<>();
-        response.put("userData", req);
+        response.put("vendorData", req);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
