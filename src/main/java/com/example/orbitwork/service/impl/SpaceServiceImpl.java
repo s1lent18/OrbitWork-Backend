@@ -22,9 +22,9 @@ public class SpaceServiceImpl implements SpaceService {
     }
 
     @Override
-    public SpaceDTO registerSpace(SpaceDTO spaceDTO, Long vendorId) {
+    public SpaceDTO registerSpace(SpaceDTO spaceDTO, String vendorEmail) {
 
-        User vendor = userRepository.findById(vendorId).orElseThrow(() -> new UserNotFoundException("User Not Found"));
+        User vendor = userRepository.findByEmail(vendorEmail).orElseThrow(() -> new UserNotFoundException("User Not Found"));
 
         Space space = new Space(
                 spaceDTO.getName(),
