@@ -5,15 +5,14 @@ import com.example.orbitwork.dto.SpaceDTO;
 import com.example.orbitwork.service.SpaceService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -35,5 +34,22 @@ public class SpaceController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ApiResponse<>("Space added successfully", response));
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<SpaceDTO>> getSpaces(
+            @RequestParam() String location,
+            Pageable pageable
+    ) {
+        return ResponseEntity.ok(spaceService.getSpaces(pageable, location));
+    }
+
+    @GetMapping("/vendor/{vendorId}")
+    @PreAuthorize("hasRole('VENDOR')")
+    public ResponseEntity<Page<SpaceDTO>> getVendorSpaces(
+            @PathVariable Long vendorId,
+            Pageable pageable
+    ) {
+        return ResponseEntity.ok(spaceService.getVendorSpaces(pageable, vendorId));
     }
 }
