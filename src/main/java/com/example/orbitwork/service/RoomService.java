@@ -14,4 +14,6 @@ public interface RoomService {
     RoomDTO updateRoom(Long spaceId, Long roomId, UpdateRoomDTO updateDTO, String vendorEmail);
 
     Page<RoomDTO> getRooms(Long spaceId, Pageable pageable);
+
+    void deleteRoom(Long spaceId, Long roomId, String vendorEmail);
 }

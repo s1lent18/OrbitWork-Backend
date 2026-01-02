@@ -93,4 +93,21 @@ public class RoomServiceImpl implements RoomService {
 
         return rooms.map(this::mapToDto);
     }
+
+    @Override
+    public void deleteRoom(Long spaceId, Long roomId, String vendorEmail) {
+
+        Room room = roomRepository
+                .findByIdAndSpace_IdAndSpace_Vendor_Email(
+                        roomId, spaceId, vendorEmail
+                )
+                .orElseThrow(() ->
+                        new RoomNotFoundException(
+                                "Room not found or you don't own this room"
+                        )
+                );
+
+        Space space = room.getSpace();
+        space.getRooms().remove(room);
+    }
 }

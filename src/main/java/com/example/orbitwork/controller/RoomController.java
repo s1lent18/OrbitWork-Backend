@@ -62,4 +62,20 @@ public class RoomController {
     ) {
         return ResponseEntity.ok(roomService.getRooms(spaceId, pageable));
     }
+
+    @DeleteMapping("/{roomId}")
+    @PreAuthorize("hasRole('VENDOR')")
+    public ResponseEntity<ApiResponse<Void>> deleteRoom(
+            @PathVariable Long spaceId,
+            @PathVariable Long roomId,
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        String email = userDetails.getUsername();
+
+        roomService.deleteRoom(spaceId, roomId, email);
+
+        return ResponseEntity.ok(
+                new ApiResponse<>("Room deleted successfully", null)
+        );
+    }
 }

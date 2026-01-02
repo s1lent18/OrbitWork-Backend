@@ -16,4 +16,6 @@ public interface SpaceService {
     Page<SpaceDTO> getVendorSpaces(Pageable pageable, Long vendorId);
 
     SpaceDTO updateSpace(Long spaceId, UpdateSpaceDTO updateDTO, String vendorEmail);
+
+    void deleteSpace();
 }
