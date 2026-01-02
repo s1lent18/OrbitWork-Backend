@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -46,6 +48,14 @@ public class Space {
 
     @Column(name = "close_time", nullable = false)
     private LocalTime closeTime;
+
+    @OneToMany(mappedBy = "space", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Room> rooms = new ArrayList<>();
+
+    public void addRoom(Room room) {
+        rooms.add(room);
+        room.setSpace(this);
+    }
 
     public Space(
             String name, String description, String googleMapLocation, String city,
