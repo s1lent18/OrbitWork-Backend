@@ -1,13 +1,16 @@
 package com.example.orbitwork.service.impl;
 
 import com.example.orbitwork.dto.SpaceDTO;
+import com.example.orbitwork.dto.UpdateSpaceDTO;
 import com.example.orbitwork.entity.Space;
 import com.example.orbitwork.entity.User;
 import com.example.orbitwork.exception.LocationNotFoundException;
+import com.example.orbitwork.exception.SpaceNotFoundException;
 import com.example.orbitwork.exception.UserNotFoundException;
 import com.example.orbitwork.repository.SpaceRepository;
 import com.example.orbitwork.repository.UserRepository;
 import com.example.orbitwork.service.SpaceService;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -95,4 +98,45 @@ public class SpaceServiceImpl implements SpaceService {
 
         return spacePage.map(this::mapToDto);
     }
+
+    @Transactional
+    @Override
+    public SpaceDTO updateSpace(Long spaceId, UpdateSpaceDTO updateDTO, String vendorEmail) {
+
+        Space space = spaceRepository.findByIdAndVendor_Email(spaceId, vendorEmail)
+                .orElseThrow(() -> new SpaceNotFoundException("Space not found or you do not own this space"));
+
+        if (updateDTO.getName() != null) {
+            space.setName(updateDTO.getName());
+        }
+
+        if (updateDTO.getDescription() != null) {
+            space.setDescription(updateDTO.getDescription());
+        }
+
+        if (updateDTO.getGoogleMapLocation() != null) {
+            space.setGoogleMapLocation(updateDTO.getGoogleMapLocation());
+        }
+
+        if (updateDTO.getCity() != null) {
+            space.setCity(updateDTO.getCity());
+        }
+
+        if (updateDTO.getPrice() != null) {
+            space.setPrice(updateDTO.getPrice());
+        }
+
+        if (updateDTO.getOpenTime() != null) {
+            space.setOpenTime(updateDTO.getOpenTime());
+        }
+
+        if (updateDTO.getCloseTime() != null) {
+            space.setOpenTime(updateDTO.getCloseTime());
+        }
+
+        Space updatedSpace = spaceRepository.save(space);
+
+        return mapToDto(updatedSpace);
+    }
+
 }

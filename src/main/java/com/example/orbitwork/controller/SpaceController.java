@@ -2,6 +2,7 @@ package com.example.orbitwork.controller;
 
 import com.example.orbitwork.dto.ApiResponse;
 import com.example.orbitwork.dto.SpaceDTO;
+import com.example.orbitwork.dto.UpdateSpaceDTO;
 import com.example.orbitwork.service.SpaceService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,4 +53,19 @@ public class SpaceController {
     ) {
         return ResponseEntity.ok(spaceService.getVendorSpaces(pageable, vendorId));
     }
+
+    @PatchMapping("/{spaceId}")
+    @PreAuthorize("hasRole('VENDOR')")
+    public ResponseEntity<ApiResponse<SpaceDTO>> updateSpace(
+            @PathVariable Long spaceId,
+            @RequestBody UpdateSpaceDTO updateDTO,
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        String email = userDetails.getUsername();
+
+        SpaceDTO updatedSpace = spaceService.updateSpace(spaceId, updateDTO, email);
+
+        return ResponseEntity.ok(new ApiResponse<>("Space updated successfully", updatedSpace));
+    }
+
 }

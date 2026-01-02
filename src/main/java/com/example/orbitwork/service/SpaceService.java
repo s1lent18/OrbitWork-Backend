@@ -1,6 +1,7 @@
 package com.example.orbitwork.service;
 
 import com.example.orbitwork.dto.SpaceDTO;
+import com.example.orbitwork.dto.UpdateSpaceDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,4 +14,6 @@ public interface SpaceService {
     Page<SpaceDTO> getSpaces(Pageable pageable, String location);
 
     Page<SpaceDTO> getVendorSpaces(Pageable pageable, Long vendorId);
+
+    SpaceDTO updateSpace(Long spaceId, UpdateSpaceDTO updateDTO, String vendorEmail);
 }

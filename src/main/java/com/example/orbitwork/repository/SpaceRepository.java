@@ -14,4 +14,6 @@ public interface SpaceRepository extends JpaRepository<Space, Long> {
     Page<Space> findByVendor_Id(Long vendorId, Pageable pageable);
 
     Optional<Space> findByIdAndVendor_Id(Long id, Long vendorId);
+
+    Optional<Space> findByIdAndVendor_Email(Long id, String email);
 }
